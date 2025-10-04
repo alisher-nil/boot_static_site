@@ -1,5 +1,5 @@
 def main():
-    print("Hello from boot-static-site!")
+    print("hello world!")
 
 
 if __name__ == "__main__":
