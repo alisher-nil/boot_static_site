@@ -1,5 +1,13 @@
+from textnode import TextNode, TextType
+
+
 def main():
-    print("hello world!")
+    node = TextNode(
+        "hello",
+        TextType.BOLD_TEXT,
+        "https://www.google.com",
+    )
+    print(node)
 
 
 if __name__ == "__main__":
