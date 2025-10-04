@@ -4,7 +4,7 @@ from textnode import TextNode, TextType
 def main():
     node = TextNode(
         "hello",
-        TextType.BOLD_TEXT,
+        TextType.BOLD,
         "https://www.google.com",
     )
     print(node)
