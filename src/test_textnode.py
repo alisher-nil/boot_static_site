@@ -10,14 +10,14 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_unequal(self):
-        node = TextNode("Text node 1", TextType.PLAIN)
-        another_node = TextNode("Text node 2", TextType.PLAIN)
+        node = TextNode("Text node 1", TextType.TEXT)
+        another_node = TextNode("Text node 2", TextType.TEXT)
         self.assertNotEqual(node, another_node)
 
     def test_different_types(self):
         common_text = "Same text"
         type1 = TextType.BOLD
-        type2 = TextType.PLAIN
+        type2 = TextType.TEXT
         node_1 = TextNode(common_text, type1)
         node_2 = TextNode(common_text, type2)
         self.assertNotEqual(node_1, node_2)

@@ -1,4 +1,4 @@
-from typing import Self
+from typing import Sequence
 
 
 class HTMLNode:
@@ -6,7 +6,7 @@ class HTMLNode:
         self,
         tag: str | None = None,
         value: str | None = None,
-        children: list[Self] | None = None,
+        children: Sequence["HTMLNode"] | None = None,
         props: dict[str, str] | None = None,
     ) -> None:
         self.tag = tag
@@ -43,3 +43,23 @@ class LeafNode(HTMLNode):
             return self.value
         props = self.props_to_html()
         return f"<{self.tag}{props}>{self.value}</{self.tag}>"
+
+
+class ParentNode(HTMLNode):
+    def __init__(
+        self,
+        tag: str,
+        children: Sequence[HTMLNode],
+        props: dict[str, str] | None = None,
+    ) -> None:
+        super().__init__(tag, None, children, props)
+
+    def to_html(self) -> str:
+        if not self.tag:
+            raise ValueError("parent node must have a tag")
+        if not self.children:
+            raise ValueError("parent node must have children")
+        children_content = [child.to_html() for child in self.children]
+        props = self.props_to_html()
+        result = f"<{self.tag}{props}>{''.join(children_content)}</{self.tag}>"
+        return result
