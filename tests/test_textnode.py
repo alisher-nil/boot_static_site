@@ -5,6 +5,20 @@ from src.textnode import TextNode, TextType
 
 class TestTextNode:
     @pytest.mark.parametrize(
+        "value, type",
+        [
+            ["shouty text", TextType.BOLD],
+            ["plain text", TextType.TEXT],
+            ["italic text", TextType.ITALIC],
+            ["monospace text", TextType.CODE],
+        ],
+    )
+    def test_same(self, value, type):
+        node1 = TextNode(value, type)
+        node2 = TextNode(value, type)
+        assert node1 == node2
+
+    @pytest.mark.parametrize(
         "type1, type2",
         [
             [TextType.BOLD, TextType.CODE],
