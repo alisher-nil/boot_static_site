@@ -1,1 +1,2 @@
-python3 -m unittest discover -s src -v
+uv sync
+pytest --maxfail=1 --disable-warnings
