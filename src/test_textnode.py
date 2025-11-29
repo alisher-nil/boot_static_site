@@ -1,8 +1,14 @@
 import pytest
 from pytest_lazy_fixtures import lf
 
+from textnode import TextNode, TextType
+
 
 class TestTextNode:
+    def test_empty_url_init(self):
+        node = TextNode("text", TextType.BOLD)
+        assert node.url is None
+
     @pytest.mark.parametrize(
         "node1, node2, expected_result",
         [
