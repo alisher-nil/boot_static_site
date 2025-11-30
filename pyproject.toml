@@ -13,4 +13,4 @@ testpaths = [
     "tests",
 ]
 minversion = "8.0"
-addopts = "-vv"
+addopts = "-vv --cache-clear -p no:cacheprovider"
