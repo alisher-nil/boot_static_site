@@ -1,6 +1,6 @@
 import pytest
 
-from src.htmlnode import HTMLNode
+from src.htmlnode import HTMLNode, LeafNode
 
 
 class TestHTMLNode:
@@ -22,3 +22,27 @@ class TestHTMLNode:
         for key, value in html_node_props.items():
             parts.append(f' {key}="{value}"')
         assert html_node.props_to_html() == "".join(parts)
+
+
+class TestLeafNode:
+    def test_empty_value(self):
+        node = LeafNode("b", "")
+        with pytest.raises(ValueError):
+            node.to_html()
+
+    @pytest.mark.parametrize(
+        "value, tag, props, result",
+        (
+            ("some text", "b", None, "<b>some text</b>"),
+            ("some text", "", None, "some text"),
+            (
+                "some text",
+                "a",
+                {"href": "http://example.com"},
+                '<a href="http://example.com">some text</a>',
+            ),
+        ),
+    )
+    def test_to_html(self, value, tag, props, result):
+        node = LeafNode(tag, value, props)
+        assert node.to_html() == result
