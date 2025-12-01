@@ -1,7 +1,7 @@
 import pytest
 from pytest_lazy_fixtures import lf
 
-from textnode import TextNode, TextType
+from src.textnode import TextNode, TextType
 
 
 class TestTextNode:

@@ -1,6 +1,6 @@
 import pytest
 
-from textnode import TextNode, TextType
+from src.textnode import TextNode, TextType
 
 
 @pytest.fixture
