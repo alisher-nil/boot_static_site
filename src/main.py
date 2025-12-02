@@ -1,9 +1,18 @@
-from textnode import TextNode, TextType
+from htmlnode import LeafNode, ParentNode
 
 
 def main():
-    node = TextNode("Cabbages and kings", TextType.BOLD, "http://www.example.com")
-    print(node)
+    node = ParentNode(
+        "p",
+        [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "italic text"),
+            LeafNode(None, "Normal text"),
+        ],
+    )
+
+    print(node.to_html())
 
 
 if __name__ == "__main__":
