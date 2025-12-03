@@ -1,6 +1,7 @@
 import pytest
+from pytest_lazy_fixtures import lf
 
-from src.htmlnode import HTMLNode, LeafNode
+from src.htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode:
@@ -46,3 +47,26 @@ class TestLeafNode:
     def test_to_html(self, value, tag, props, result):
         node = LeafNode(tag, value, props)
         assert node.to_html() == result
+
+
+class TestParentNode:
+    @pytest.mark.parametrize(
+        "node, result",
+        ((lf("parent_node"), lf("parent_node_text")),),
+    )
+    def test_to_html(self, node, result):
+        assert node.to_html() == result
+
+    @pytest.mark.parametrize(
+        "node, error_text",
+        (
+            (ParentNode("p", []), "ParentNode must have at least one child node"),
+            (
+                ParentNode("", [LeafNode("b", "Bold text")]),
+                "ParentNode must have a tag",
+            ),
+        ),
+    )
+    def test_bad_cases(self, node, error_text):
+        with pytest.raises(ValueError, match=error_text):
+            node.to_html()
