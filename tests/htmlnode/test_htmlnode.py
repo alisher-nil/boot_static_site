@@ -1,5 +1,4 @@
 import pytest
-from pytest_lazy_fixtures import lf
 
 from src.htmlnode import HTMLNode, LeafNode, ParentNode
 
@@ -52,7 +51,18 @@ class TestLeafNode:
 class TestParentNode:
     @pytest.mark.parametrize(
         "node, result",
-        ((lf("parent_node"), lf("parent_node_text")),),
+        (
+            (
+                ParentNode(
+                    "p", [LeafNode("b", "Bold text"), LeafNode(None, "Normal text")]
+                ),
+                "<p><b>Bold text</b>Normal text</p>",
+            ),
+            (
+                ParentNode("div", [ParentNode("p", [LeafNode("b", "Bold text")])]),
+                "<div><p><b>Bold text</b></p></div>",
+            ),
+        ),
     )
     def test_to_html(self, node, result):
         assert node.to_html() == result
@@ -60,13 +70,24 @@ class TestParentNode:
     @pytest.mark.parametrize(
         "node, error_text",
         (
-            (ParentNode("p", []), "ParentNode must have at least one child node"),
+            (
+                ParentNode("p", []),
+                "ParentNode must have at least one child node",
+            ),
+            (
+                ParentNode("p", None),
+                "ParentNode must have at least one child node",
+            ),
             (
                 ParentNode("", [LeafNode("b", "Bold text")]),
                 "ParentNode must have a tag",
             ),
+            (
+                ParentNode(None, [LeafNode("b", "Bold text")]),
+                "ParentNode must have a tag",
+            ),
         ),
     )
-    def test_bad_cases(self, node, error_text):
+    def test_invalid_empty_values(self, node, error_text):
         with pytest.raises(ValueError, match=error_text):
             node.to_html()
