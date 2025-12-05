@@ -29,10 +29,7 @@ class TextNode:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
 
 
-def text_node_to_html_node(text_node: TextNode):
-    if text_node.text_type not in TextType:
-        raise ValueError(f"Invalid text type: {text_node.text_type}")
-
+def text_node_to_html_node(text_node: TextNode) -> LeafNode:
     if text_node.text_type == TextType.TEXT:
         return LeafNode(None, text_node.text)
     elif text_node.text_type == TextType.BOLD:
@@ -49,3 +46,5 @@ def text_node_to_html_node(text_node: TextNode):
         if text_node.url is None:
             raise ValueError("Image text node url can not be empty")
         return LeafNode("img", "", {"alt": text_node.text, "src": text_node.url})
+    else:
+        raise ValueError(f"Invalid text type: {text_node.text_type}")
