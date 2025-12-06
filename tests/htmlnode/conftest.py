@@ -7,7 +7,7 @@ from src.htmlnode import HTMLNode
 def html_node_props() -> dict:
     return {
         "color": "blue",
-        "href": "https://www.google.com",
+        "href": "https://www.example.org",
         "target": "_blank",
     }
 
