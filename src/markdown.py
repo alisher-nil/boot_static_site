@@ -16,7 +16,10 @@ def split_nodes_delimiter(
         new_nodes = []
         parts = node.text.split(delimiter)
         if len(parts) % 2 == 0:
-            raise ValueError("invalid markdown syntax")
+            raise ValueError(
+                "invalid markdown syntax, either opening or closing "
+                f"delimeter ({delimiter}) is missing"
+            )
 
         for i in range(len(parts)):
             part = parts[i]
