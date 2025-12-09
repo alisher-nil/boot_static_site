@@ -72,19 +72,19 @@ class TestExtractMarkdown:
         "text, expected_matches",
         [
             (
-                "This is text with a link [shitsumon](https://www.example.com)",
-                [("shitsumon", "https://www.example.com")],
+                "This is text with a link [example_one](https://www.example.com)",
+                [("example_one", "https://www.example.com")],
             ),
             (
                 "This is text with image ![image](https://i.imgur.com/zjjcJKZ.png)",
                 [],
             ),
             (
-                "This is text with two links [shitsumon](https://www.example.com), "
-                "[mysaly](https://www.example.net)",
+                "This is text with two links [example_one](https://www.example.com), "
+                "[example_two](https://www.example.net)",
                 [
-                    ("shitsumon", "https://www.example.com"),
-                    ("mysaly", "https://www.example.net"),
+                    ("example_one", "https://www.example.com"),
+                    ("example_two", "https://www.example.net"),
                 ],
             ),
         ],
