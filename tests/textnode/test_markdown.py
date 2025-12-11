@@ -4,6 +4,7 @@ from src.markdown import (
     extract_markdown_images,
     extract_markdown_links,
     split_nodes_delimiter,
+    split_nodes_image,
 )
 from src.textnode import TextNode, TextType
 
@@ -92,3 +93,16 @@ class TestExtractMarkdown:
     def test_extract_markdown_links(self, text, expected_matches):
         matches = extract_markdown_links(text)
         assert matches == expected_matches
+
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        assert new_nodes == [
+            TextNode("This is text with an ", TextType.TEXT),
+            TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            TextNode(" and another ", TextType.TEXT),
+            TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"),
+        ]
