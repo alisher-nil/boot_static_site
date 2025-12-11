@@ -52,23 +52,25 @@ def split_nodes(
 ) -> list[TextNode]:
     result = []
     for node in old_nodes:
+        new_nodes = []
         if node.text_type != TextType.TEXT:
-            result.append(node)
+            new_nodes.append(node)
             continue
         if not node.text:
             continue
         text_url_pairs = extractor(node.text)
         if not text_url_pairs:
-            result.append(node)
+            new_nodes.append(node)
             continue
         text_to_split = node.text
         for text, url in text_url_pairs:
             separator = markdown_template.format(text=text, url=url)
             sections = text_to_split.split(separator, 1)
             if sections[0]:
-                result.append(TextNode(sections[0], TextType.TEXT))
-            result.append(TextNode(text, TextType.IMAGE, url))
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
+            new_nodes.append(TextNode(text, TextType.IMAGE, url))
             text_to_split = sections[1]
+        result.extend(new_nodes)
     return result
 
 
