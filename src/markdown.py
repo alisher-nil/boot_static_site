@@ -82,9 +82,3 @@ def extract_markdown_links(text: str) -> list[tuple[str, str]]:
     pattern = r"(?<!!)\[(.*?)\]\((.*?)\)"
     pairs = re.findall(pattern, text)
     return pairs
-
-
-def markdown_to_blocks(markdown: str) -> list[str]:
-    block_splitter = "\n\n"
-    blocks = [block.strip() for block in markdown.split(block_splitter) if block.strip()]
-    return blocks
