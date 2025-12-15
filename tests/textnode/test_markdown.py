@@ -111,11 +111,43 @@ class TestExtractMarkdown:
                 "![1_image](https://i.imgur.com/zjjcJKZ.png)",
                 [TextNode("1_image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png")],
             ),
-            ("[link](https://i.imgur.com/zjjcJKZ.png)", []),
+            (
+                "[link](https://i.imgur.com/not_empty.png)",
+                [TextNode("[link](https://i.imgur.com/not_empty.png)", TextType.TEXT)],
+            ),
             ("", []),
         ),
     )
     def test_split_images(self, text, result_nodes):
         node = TextNode(text, TextType.TEXT)
         new_nodes = split_nodes_image([node])
+        assert new_nodes == result_nodes
+
+    @pytest.mark.parametrize(
+        "nodes, result_nodes",
+        (
+            (
+                [
+                    TextNode("![link](https://i.imgur.com/not_empty.png)", TextType.TEXT),
+                    TextNode("[link](https://i.imgur.com/not_empty.png)", TextType.TEXT),
+                ],
+                [
+                    TextNode("link", TextType.IMAGE, "https://i.imgur.com/not_empty.png"),
+                    TextNode("[link](https://i.imgur.com/not_empty.png)", TextType.TEXT),
+                ],
+            ),
+            (
+                [
+                    TextNode("some text", TextType.TEXT),
+                    TextNode("some text", TextType.TEXT),
+                ],
+                [
+                    TextNode("some text", TextType.TEXT),
+                    TextNode("some text", TextType.TEXT),
+                ],
+            ),
+        ),
+    )
+    def test_split_multiple_nodes(self, nodes, result_nodes):
+        new_nodes = split_nodes_image(nodes)
         assert new_nodes == result_nodes
