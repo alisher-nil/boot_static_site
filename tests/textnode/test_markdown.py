@@ -94,16 +94,28 @@ class TestExtractMarkdown:
         matches = extract_markdown_links(text)
         assert matches == expected_matches
 
-    def test_split_images(self):
-        node = TextNode(
-            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another "
-            "![second image](https://i.imgur.com/3elNhQu.png)",
-            TextType.TEXT,
-        )
+    @pytest.mark.parametrize(
+        "text, result_nodes",
+        (
+            (
+                "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and "
+                "another ![image2](https://i.imgur.com/3elNhQu.png)",
+                [
+                    TextNode("This is text with an ", TextType.TEXT),
+                    TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                    TextNode(" and another ", TextType.TEXT),
+                    TextNode("image2", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"),
+                ],
+            ),
+            (
+                "![1_image](https://i.imgur.com/zjjcJKZ.png)",
+                [TextNode("1_image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png")],
+            ),
+            ("[link](https://i.imgur.com/zjjcJKZ.png)", []),
+            ("", []),
+        ),
+    )
+    def test_split_images(self, text, result_nodes):
+        node = TextNode(text, TextType.TEXT)
         new_nodes = split_nodes_image([node])
-        assert new_nodes == [
-            TextNode("This is text with an ", TextType.TEXT),
-            TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
-            TextNode(" and another ", TextType.TEXT),
-            TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"),
-        ]
+        assert new_nodes == result_nodes
