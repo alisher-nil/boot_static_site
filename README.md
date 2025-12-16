@@ -1,4 +1,4 @@
 # boot_static_site
 A static site from a boot.dev course
 
-someday
+someday but not today :D
