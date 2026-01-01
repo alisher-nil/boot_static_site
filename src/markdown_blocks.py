@@ -12,14 +12,35 @@ class BlockType(Enum):
 
 
 def markdown_to_blocks(markdown: str) -> list[str]:
-    block_splitter = "\n\n"
-    blocks = [block.strip() for block in markdown.split(block_splitter) if block.strip()]
+    block_splitter = r"\n\s*?\n"
+    blocks = [
+        block.strip() for block in re.split(block_splitter, markdown) if block.strip()
+    ]
     return blocks
 
 
 def block_to_block_type(markdown: str) -> BlockType:
-    heading_pattern = r"^[#]{1,6} .*$"
+    heading_pattern = r"^#{1,6}\s.*$"
+    code_pattern = r"^```[\s\S]*?```$"
+    quote_pattern = r"^>\s.*?$"
+    ulist_pattern = r"^-\s.*?$"
     if re.match(heading_pattern, markdown):
         return BlockType.HEADING
+    elif re.match(code_pattern, markdown):
+        return BlockType.CODE
+    elif re.match(quote_pattern, markdown, re.MULTILINE):
+        return BlockType.QUOTE
+    elif re.match(ulist_pattern, markdown, re.MULTILINE):
+        return BlockType.UNORDERED_LIST
+    elif is_ordered_list(markdown):
+        return BlockType.ORDERED_LIST
     else:
         return BlockType.PARAGRAPH
+
+
+def is_ordered_list(markdown: str) -> bool:
+    lines = markdown.split("\n")
+    for i, line in enumerate(lines, start=1):
+        if not re.match(rf"^{i}\.\s", line):
+            return False
+    return True
