@@ -12,17 +12,14 @@ class BlockType(Enum):
 
 
 def markdown_to_blocks(markdown: str) -> list[str]:
-    block_splitter = r"\n\s*?\n"
-    blocks = [
-        block.strip() for block in re.split(block_splitter, markdown) if block.strip()
-    ]
-    return blocks
+    splitter = "\n\n"
+    return [block.strip() for block in markdown.split(splitter) if block.strip()]
 
 
 def block_to_block_type(markdown: str) -> BlockType:
     heading_pattern = r"^#{1,6}\s.*$"
     code_pattern = r"^```[\s\S]*?```$"
-    quote_pattern = r"^>\s.*?$"
+    quote_pattern = r"^>.*?$"
     ulist_pattern = r"^-\s.*?$"
     if re.match(heading_pattern, markdown):
         return BlockType.HEADING

@@ -37,15 +37,15 @@ def split_nodes_delimiter(
 
 def split_nodes_image(old_nodes: Sequence[TextNode]) -> list[TextNode]:
     markdown_template = "![{text}]({url})"
-    return split_nodes(old_nodes, markdown_template, extract_markdown_images)
+    return split_media_nodes(old_nodes, markdown_template, extract_markdown_images)
 
 
 def split_nodes_link(old_nodes: Sequence[TextNode]) -> list[TextNode]:
     markdown_template = "[{text}]({url})"
-    return split_nodes(old_nodes, markdown_template, extract_markdown_links)
+    return split_media_nodes(old_nodes, markdown_template, extract_markdown_links)
 
 
-def split_nodes(
+def split_media_nodes(
     old_nodes: Sequence[TextNode],
     markdown_template: str,
     extractor: Callable,
