@@ -82,3 +82,12 @@ def extract_markdown_links(text: str) -> list[tuple[str, str]]:
     pattern = r"(?<!!)\[(.*?)\]\((.*?)\)"
     pairs = re.findall(pattern, text)
     return pairs
+
+
+def extract_title(markdown: str):
+    pattern = r"^#\s(?P<title>.*?)$"
+    if matches := re.match(pattern, markdown, re.MULTILINE):
+        title = matches.group("title")
+        return title
+    else:
+        raise ValueError("No title found in markdown")

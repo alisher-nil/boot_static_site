@@ -3,6 +3,7 @@ import pytest
 from src.markdown import (
     extract_markdown_images,
     extract_markdown_links,
+    extract_title,
     split_nodes_delimiter,
     split_nodes_image,
 )
@@ -151,3 +152,15 @@ class TestExtractMarkdown:
     def test_split_multiple_nodes(self, nodes, result_nodes):
         new_nodes = split_nodes_image(nodes)
         assert new_nodes == result_nodes
+
+
+class TestUtils:
+    def test_title_extraction(self):
+        markdown_with_title = "# This is a Title\n\nSome content here."
+        title = extract_title(markdown_with_title)
+        assert title == "This is a Title"
+
+    def test_title_extraction_no_title(self):
+        markdown_without_title = "No title here, just content."
+        with pytest.raises(ValueError, match="No title found in markdown"):
+            extract_title(markdown_without_title)
