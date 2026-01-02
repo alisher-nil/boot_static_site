@@ -19,7 +19,7 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 def block_to_block_type(markdown: str) -> BlockType:
     heading_pattern = r"^#{1,6}\s.*$"
     code_pattern = r"^```[\s\S]*?```$"
-    quote_pattern = r"^>.*?$"
+    quote_pattern = r"^>\s.*?$"
     ulist_pattern = r"^-\s.*?$"
     if re.match(heading_pattern, markdown):
         return BlockType.HEADING

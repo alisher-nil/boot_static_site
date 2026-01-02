@@ -42,7 +42,7 @@ def ulist_block_to_html_node(block: str) -> HTMLNode:
 
 
 def olist_block_to_html_node(block: str) -> HTMLNode:
-    pattern = r"^\d+?\s(?P<value>.*?)$"
+    pattern = r"^\d\.+?\s(?P<value>.*?)$"
     lines = block.split("\n")
     nodes = []
     for line in lines:
@@ -65,13 +65,14 @@ def heading_block_to_html_node(block: str) -> HTMLNode:
 
 
 def quote_block_to_html_node(block: str) -> HTMLNode:
-    pattern = r"^>(?P<value>.*?)$"
+    pattern = r"^>\s?(?P<value>.*?)$"
     lines = block.split("\n")
     nodes = []
     for line in lines:
         if matches := re.match(pattern, line):
             value = matches.group("value")
-            nodes.append(ParentNode("p", text_to_html_nodes(value)))
+            if value:
+                nodes.append(ParentNode(None, text_to_html_nodes(value)))
         else:
             raise ValueError("Invalid quote block format")
     return ParentNode("blockquote", nodes)
