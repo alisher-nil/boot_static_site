@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 from src.constants import CONTENT_DIR, PUBLIC_DIR, STATIC_DIR
 from src.convert import markdown_to_html_node
@@ -7,11 +8,19 @@ from src.markdown import extract_title
 
 
 def main():
+    basepath = parse_root_url()
+    print(f"Base path: {basepath}")
     reset_public_directory()
-    generate_pages()
+    generate_pages(basepath)
 
 
-def generate_pages():
+def parse_root_url() -> str:
+    if len(sys.argv) < 2:
+        return "/"
+    return sys.argv[1]
+
+
+def generate_pages(basepath: str):
     files = find_files_with_extension(CONTENT_DIR, ".md")
     for file_path in files:
         dirname = os.path.dirname(file_path)
@@ -23,7 +32,7 @@ def generate_pages():
             os.makedirs(dest_dir)
         filename = os.path.splitext(os.path.basename(file_path))[0]
         dest_path = os.path.join(dest_dir, f"{filename}.html")
-        generate_page(file_path, "template.html", dest_path)
+        generate_page(file_path, "template.html", dest_path, basepath)
 
 
 def find_files_with_extension(directory: str, extension: str) -> list[str]:
@@ -36,7 +45,7 @@ def find_files_with_extension(directory: str, extension: str) -> list[str]:
     return files
 
 
-def generate_page(from_path: str, template_path: str, dest_path: str):
+def generate_page(from_path: str, template_path: str, dest_path: str, basepath: str):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, "r") as f:
         markdown_content = f.read()
@@ -46,6 +55,8 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
     title = extract_title(markdown_content)
     template_content = template_content.replace(r"{{ Title }}", title)
     template_content = template_content.replace(r"{{ Content }}", html)
+    template_content = template_content.replace(r'href="/', f'href="{basepath}')
+    template_content = template_content.replace(r'src="/', f'src="{basepath}')
 
     if not os.path.exists(os.path.dirname(dest_path)):
         os.makedirs(os.path.dirname(dest_path))
